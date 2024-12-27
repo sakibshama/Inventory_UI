@@ -1,0 +1,182 @@
+[
+    {
+        "header": "",
+        "items": [
+            {
+                "text": "Dashboard",
+                "icon": "bx bx-home",
+                "available": true,
+                "link": "/"
+            }
+          
+          
+           
+        ]
+    },
+    {
+        "header": "Products",
+        "items": [
+            {
+                "text": "Categories",
+                "icon": "bx bx-category",
+                "available": true,
+                "link": "/category"
+            },
+            {
+                "text": "Brands",
+                "icon": "bx bx-color",
+                "available": true,
+                "link": "/brand"
+            },
+            {
+                "text": "Products",
+                "icon": "bx bx-package",
+                "available": true,
+                "link": "/product"
+            },
+            {
+                "text": "Containers",
+                "icon": "bx bx-store-alt",
+                "available": true,
+                "link": "/container"
+            },
+            {
+                "text": "All Stocks",
+                "icon": "bx bx-box",
+                "available": true,
+                "link": "/all_stocks"
+            },
+            {
+                "text": "Stock History",
+                "icon": "bx bx-history",
+                "available": true,
+                "link": "/stock"
+            }
+        ]
+    },
+    {
+        "header": "Customer & Dwellers",
+        "items":[
+            {
+                "text": "Supplier",
+                "icon": "bx bxs-user-check",
+                "available": true,
+                "link": "/supplier"
+            },
+          
+            {
+                "text": "Customers",
+                "icon": "bx bxs-user-rectangle",
+                "available": true,
+                "link": "/customers"
+            }
+         
+        ]
+    },
+    {
+        "header": "Paymnets",
+        "items": [
+            {
+                "text": "Payment types",
+                "icon": "bx bxs-objects-horizontal-left",
+                "available": true,
+                "link": "/paymentType"
+            },
+            {
+                "text": "Transaction",
+                "icon": "bx bx-transfer",
+                "available": true,
+                "link": "/transaction"
+            },
+            {
+                "text": "Investment",
+                "icon": "bx bxs-log-in",
+                "available": true,
+                "link": "/investment"
+            }
+        ]
+    },
+
+    {
+        "header": "Expenses",
+        "items": [
+            {
+                "text": "Expense Category",
+                "icon": "bx bxs-duplicate",
+                "available": true,
+                "link": "/expenseCategory"
+            },
+            {
+                "text": "Expense",
+                "icon": "bx bx-pound",
+                "available": true,
+                "link": "/expense"
+            }
+        ]
+    },
+    {
+        "header": "Sells product",
+        "items": [
+            {
+                "text": "Sells",
+                "icon": "bx bx-cart-add",
+                "available": true,
+                "link": "/sells"
+            },
+            {
+                "text": "Sells Items",
+                "icon": "bx bxs-briefcase-alt-2",
+                "available": true,
+                "link": "/sellItem"
+            },
+            {
+                "text": "Generate Bill",
+                "icon": "bx bx-credit-card",
+                "available": true,
+                "link": "/bill/generate"
+            },
+            
+            {
+                "text": "Bills",
+                "icon": "bx bx-dollar",
+                "available": true,
+                "link": "/bill"
+            },
+            
+            {
+                "text": "Monthly Report",
+                "icon": "bx bxs-report",
+                "available": true,
+                "link": "/monthlyReport"
+            }
+        ]
+    },
+    {
+        "header": "Developer",
+        "items": [
+            {
+                "text": "Roles",
+                "icon": "bx bx-support",
+                "available": true,
+                "link": "/role"
+            },
+            {
+                "text": "Users",
+                "icon": "bx bx-support",
+                "available": true,
+                "link": "/user"
+            }
+        ]
+    },
+    {
+        "header": "MISC",
+        "items": [
+            {
+                "text": "Mystrix IT Support",
+                "icon": "bx bx-support",
+                "available": true,
+                "link": "https://mystrix.site/"
+            }
+        ]
+    }
+]

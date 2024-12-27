@@ -1,0 +1,37 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.lgo{
+    background-color: aliceblue;
+    padding: 0px 10px;
+    border-radius: 7px;
+}
+
+.global-logo{
+    width: 70px;
+    /* background-color: black; */
+    padding: 10px;
+    
+    border-radius: 5px;
+}
+.logo-text{
+font-size: 18px;
+font-weight: bold;
+color: rgb(41, 40, 40);
+}
+
+
+.active_cs .menu-link{
+    background-color: rgb(246, 232, 235);
+    color: crimson;
+}
+.active_cs .menu-link i{
+    color: crimson;
+}
+.active_cs .menu-link div{
+    color: crimson;
+}
+

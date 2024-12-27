@@ -1,0 +1,135 @@
+<card>
+
+<div className="bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer  max-w-sm">
+        <div className="relative">
+          <img className="w-full" src="./../../../public/img/a.png" alt="Product Image" />
+        </div>
+
+        <hr className='bg-gray-200 h-1 w-[90%] rounded mx-auto' />
+
+        <div className="p-4 text-center">
+          <h3 className="text-xl font-medium mb-2">Iphone 13 pro</h3>
+          <p className="text-gray-600 font-bold text-base mb-4">TK.150,0000000</p>
+          <div className="flex justify-center gap-2">
+
+            <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+              Add to cart
+            </button>
+            <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+              Buy Now
+            </button>
+          </div>
+        </div>
+      </div>
+<card>
+
+
+
+
+
+ {
+                cardItems && cardItems.length > 0 && cardItems.map((item) => {
+                    return (
+                        <Link key={item.id} to={item.path}>
+
+                            <div className="bg-white rounded-lg m-2 overflow-hidden shadow-lg cursor-pointer  max-w-xs">
+                                <div className="relative">
+                                    <img className="w-full" src={item.img} alt="Product Image" />
+                                </div>
+                                <hr className='bg-gray-200 h-1 w-[90%] rounded mx-auto' />
+
+                                <div className="p-4 text-center">
+                                    <h3 className="text-xl font-bold mb-2">{item.name}</h3>
+                                    <p className="text-gray-600 font-bold text-base text-red-600 mb-4">{item.price}</p>
+                                    <div className="flex justify-center gap-2">
+
+                                        <button className="bg-black hover:text-red-400 text-white font-bold py-2 px-4 rounded">
+                                            Add to cart
+                                        </button>
+                                        <button className="bg-black hover:text-red-400 text-white font-bold py-2 px-4 rounded">
+                                            Buy Now
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </Link>
+                    )
+                })
+            }
+
+
+
+
+
+
+
+
+//lolo///
+
+
+
+ <div className=" mx-auto px-4 py-8">
+            <div className="w-[80%] flex flex-wrap mx-auto">
+
+                <div className="w-full bg-red-100 md:w-1/2 px-4 mb-8">
+                    <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwxfHxoZWFkcGhvbmV8ZW58MHwwfHx8MTcyMTMwMzY5MHww&ixlib=rb-4.0.3&q=80&w=1080" alt="Product"
+                        className="w-full h-auto rounded-lg shadow-md mb-4" id="mainImage" />
+                    <div className="flex gap-4 py-4 justify-center overflow-x-auto">
+                        <img src="https://images.unsplash.com/photo-1505751171710-1f6d0ace5a85?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwxMnx8aGVhZHBob25lfGVufDB8MHx8fDE3MjEzMDM2OTB8MA&ixlib=rb-4.0.3&q=80&w=1080" alt="Thumbnail 1"
+                            className="size-16 sm:size-20 object-cover rounded-md cursor-pointer opacity-60 hover:opacity-100 transition duration-300"
+                            onclick="showImg" />
+                        <img src="https://images.unsplash.com/photo-1484704849700-f032a568e944?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw0fHxoZWFkcGhvbmV8ZW58MHwwfHx8MTcyMTMwMzY5MHww&ixlib=rb-4.0.3&q=80&w=1080" alt="Thumbnail 2"
+                            className="size-16 sm:size-20 object-cover rounded-md cursor-pointer opacity-60 hover:opacity-100 transition duration-300"
+                            onclick="showImg" />
+                        <img src="https://images.unsplash.com/photo-1496957961599-e35b69ef5d7c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw4fHxoZWFkcGhvbmV8ZW58MHwwfHx8MTcyMTMwMzY5MHww&ixlib=rb-4.0.3&q=80&w=1080" alt="Thumbnail 3"
+                            className="size-16 sm:size-20 object-cover rounded-md cursor-pointer opacity-60 hover:opacity-100 transition duration-300"
+                            onclick="showImg" />
+                        <img src="https://images.unsplash.com/photo-1528148343865-51218c4a13e6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwzfHxoZWFkcGhvbmV8ZW58MHwwfHx8MTcyMTMwMzY5MHww&ixlib=rb-4.0.3&q=80&w=1080" alt="Thumbnail 4"
+                            className="size-16 sm:size-20 object-cover rounded-md cursor-pointer opacity-60 hover:opacity-100 transition duration-300"
+                            onclick="showImg" />
+                    </div>
+                </div>
+
+
+                <div className="w-full bg-[#393938] rounded-lg md:w-1/2 p-6">
+                    <h2 className="text-2xl mt-2 text-white font-bold mb-4">Premium Wireless Headphones</h2>
+                    <p className="text-gray-400 mb-4">SKU: WH1000XM4</p>
+                    <div className="mb-4">
+                        <span className="text-white font-bold text-base mb-16">TK.349.99</span>
+                    </div>
+
+                    <div className="flex space-x-3 items-center mb-4">
+                        <h3 className="text-lg text-white  ">Color:</h3>
+                        <button className="w-8 h-8 bg-black rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400"></button>
+                        <button className="w-8 h-8 bg-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400"></button>
+                        <button className="w-8 h-8 bg-blue-500 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400"></button>
+                    </div>
+
+                    <div className="flex space-x-3 items-center mb-4">
+                        <h3 className="text-lg text-white  ">Ram:</h3>
+                        <button className="px-3 py-1 bg-gray-400 rounded-md focus:outline-none focus:ring-2  focus:ring-red-400">8GB</button>
+                    </div>
+
+                    <div className="flex space-x-3 items-center mb-4">
+                        <h3 className="text-lg text-white  ">Rom:</h3>
+                        <button className="px-3 py-1 bg-gray-400 rounded-md focus:outline-none focus:ring-2  focus:ring-red-400">256GB</button>
+                        <button className="px-3 py-1 bg-gray-400 rounded-md focus:outline-none focus:ring-2  focus:ring-red-400">500GB</button>
+                    </div>
+
+                    <div className="flex space-x-3 items-center mb-4">
+                        <h3 className="text-lg text-white  ">Quantity:</h3>
+                        <input type="number" min={1} className='rounded-md py-1 px-2 w-12 focus:outline-none focus:ring-2  focus:ring-red-400' />
+                    </div>
+
+                    <div className="flex mt-10 gap-2">
+                        <button className="bg-black text-lg hover:text-red-400 text-white font-semibold py-2 px-6 rounded">
+                            Add to cart
+                        </button>
+                        <button className="bg-black text-lg hover:text-red-400 text-white font-semibold py-2 px-6 rounded">
+                            Buy Now
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
