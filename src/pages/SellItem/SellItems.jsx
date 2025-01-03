@@ -27,12 +27,17 @@ function SellItems() {
 
     const columnNames = [
         { id: 1, val: "Sell Item ID" },
-        { id: 2, val: "Product" },
-        { id: 3, val: "Quantity" },
-        { id: 4, val: "Unit Price" },
-        { id: 5, val: "Total Price" },
-        { id: 6, val: "Profit" },
-        { id: 7, val: "Status" }
+        { id: 2, val: "Sell ID" },
+        { id: 3, val: "Product" },
+        { id: 4, val: "Container" },
+        { id: 5, val: "Stock ID" },
+        { id: 6, val: "Quantity" },
+        { id: 7, val: "Unit Price" },
+        { id: 8, val: "Total Price" },
+        { id: 9, val: "Profit" },
+        { id: 10, val: "Comission" },
+        { id: 11, val: "Status" },
+        { id: 12, val: "Action" }
     ];
 
     return (
@@ -62,12 +67,17 @@ function SellItems() {
                                 {Array.isArray(sellItems) && sellItems.map((val) => (
                                     <tr key={val.id}>
                                         <td className="text-nowrap">{val.id}</td>
+                                        <td className="text-nowrap">{val.sell_id}</td>
 
                                         <td className="text-nowrap">{val.product.name}</td>
+                                        <td className="text-nowrap">{val.container_id}</td>
+                                        <td className="text-nowrap">{val.stock_id}</td>
                                         <td className="text-nowrap">{val.quantity}</td>
                                         <td className="text-nowrap">{val.price}</td>
                                         <td className="text-nowrap">{val.total_price}</td>
                                         <td className="text-nowrap">{val.profit}</td>
+                                        <td className="text-nowrap">{val.comission}</td>
+                                        <td className="text-nowrap">{val.status}</td>
 
 
                                         <td className="text-nowrap d-flex align-items-center gap-2">

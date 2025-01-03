@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createInvestment } from "../../Slicer/InvestmentSlicer"; // Assuming you have an investment slice in your Redux store
+import {createTransaction} from '../../Slicer/TransactionSlicer';
 import {fetchPayment} from './../../Slicer/paymentTypeSlicer';
 
 function CreateInvestment() {
@@ -36,7 +37,20 @@ function CreateInvestment() {
         dispatch(createInvestment(investmentData))
             .then((res) => {
                 // Close the modal after investment is created
-                dismissModal.current.click();
+
+                 let transData = {
+                            payment_type_id:investmentData.payment_id,
+                            transaction_type:"in",
+                            amount: investmentData.amount,
+                            investment_id:res.payload.id
+                          };
+                
+                          dispatch(createTransaction(transData)).then((res2)=>{
+                            console.log(res2);
+                            
+                            dismissModal.current.click();
+                          })
+                
             })
             .catch((err) => {
                 console.error("Error creating investment:", err);

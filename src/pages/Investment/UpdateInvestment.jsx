@@ -3,11 +3,14 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { updateInvestment, fetchInvestmentById } from "../../Slicer/InvestmentSlicer";
 import { fetchPayment } from './../../Slicer/paymentTypeSlicer';
+import {updateInvestmentTransaction} from '../../Slicer/TransactionSlicer';
 
 function UpdateInvestment() {
   const dispatch = useDispatch();
   const investmentId = useSelector((state) => state.investments.investmentId);
   const paymentTypes = useSelector((state) => state.paymentType.paymentType);
+  const [isImageChanged, setIsImageChanged] = useState(false);
+  const [isDImageChanged, setIsDImageChanged] = useState(false);
   const investmentData = useSelector((state) => state.investments.investments.find(investment => investment.id === investmentId));
 
   const { register, handleSubmit, setValue, formState: { errors } } = useForm();
@@ -20,6 +23,30 @@ function UpdateInvestment() {
     dispatch(fetchPayment());
   }, [dispatch]);
 
+
+  // Convert file to base64
+  const fileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
+  // Convert FormData to JSON including base64 file
+  async function formDataToJsonWithFile(formData) {
+    const obj = {};
+    for (let [key, value] of formData.entries()) {
+      if (value instanceof File) {
+        obj[key] = await fileToBase64(value);
+      } else {
+        obj[key] = value;
+      }
+    }
+    return obj;
+  }
+
   // Fetch and set investment data
   useEffect(() => {
     if (investmentId) {
@@ -28,7 +55,7 @@ function UpdateInvestment() {
         setValue("investor_name", investor_name);
         setValue("amount", amount);
         setValue("payment_id", payment_id);
-        
+
         // Handle image preview if available
         if (image) {
           setImagePreview(`${import.meta.env.VITE_BASE_URL}/storage/${image}`);
@@ -36,47 +63,84 @@ function UpdateInvestment() {
         if (deed_image) {
           setDeedImagePreview(`${import.meta.env.VITE_BASE_URL}/storage/${deed_image}`);
         }
-        
+
         // Set form fields if image data exists
-        setValue("image", image || ""); 
-        setValue("deed_image", deed_image || ""); 
+        setValue("image", image || "");
+        setValue("deed_image", deed_image || "");
       });
     }
   }, [dispatch, investmentId, setValue]);
 
   // Handle image file change for preview
   const handleImageChange = (e) => {
+
     const file = e.target.files[0];
     if (file) {
+      setIsImageChanged(true);
+      setValue("image", file);
       setImagePreview(URL.createObjectURL(file)); // Create preview for image
     }
   };
 
   const handleDeedImageChange = (e) => {
     const file = e.target.files[0];
+
+
     if (file) {
+      setIsDImageChanged(true);
+      setValue("deed_image", e.target.files[0]);
       setDeedImagePreview(URL.createObjectURL(file)); // Create preview for deed image
     }
   };
 
   // Form submit handler
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const formData = new FormData();
     formData.append("investor_name", data.investor_name);
     formData.append("amount", data.amount);
     formData.append("payment_id", data.payment_id);
 
     // Only append image if it's updated
-    if (data.image && typeof data.image !== 'string') {
-      formData.append("image", data.image[0]);
+    if (isImageChanged) {
+      formData.append("image", data.image);
     }
 
     // Only append deed image if it's updated
-    if (data.deed_image && typeof data.deed_image !== 'string') {
-      formData.append("deed_image", data.deed_image[0]);
+    if (isDImageChanged) {
+      formData.append("deed_image", data.deed_image);
     }
 
-    dispatch(updateInvestment({ id: investmentId, updatedData: data }));
+    // dispatch(updateInvestment({ id: investmentId, updatedData: data }));
+
+    // console.log(data);
+    
+
+
+
+    try {
+      const jsonDataWithFile = await formDataToJsonWithFile(formData);
+      console.log(jsonDataWithFile);
+      
+      const response = dispatch(updateInvestment({ id: investmentId, updatedData: jsonDataWithFile }));
+      console.log(response.payload);
+
+      let upData = {
+        payment_type_id:data.payment_id,
+        amount: data.amount
+      };
+
+      dispatch(updateInvestmentTransaction({id:investmentId, updatedData:upData})).then((res)=>{
+        console.log(res);
+        
+      })
+
+
+
+    } catch (error) {
+      console.error("Error updating customer:", error);
+    }
+
+
   };
 
   return (
@@ -159,54 +223,45 @@ function UpdateInvestment() {
                   )}
                 </div>
 
-                {/* Image Preview and Upload */}
+
+
                 <div className="mb-3">
-                  <label htmlFor="imageFile" className="form-label">
-                    Investment Image (Optional)
-                  </label>
+                  <label className="form-label">Investor Image</label>
+                  <div className="mb-2">
+                    {imagePreview && <img src={imagePreview} alt="Investor" className="w-25 mb-3" />}
+                  </div>
                   <input
-                    type="file"
                     className="form-control"
-                    id="imageFile"
-                    {...register("image")}
+                    type="file"
+                    name="image"
+                    id="image"
+                    accept="image/*"
                     onChange={handleImageChange}
                   />
-                  {imagePreview && (
-                    <div className="mt-2">
-                      <img
-                        src={imagePreview}
-                        alt="Investment Image Preview"
-                        style={{ maxWidth: "200px", maxHeight: "200px" }}
-                      />
-                    </div>
-                  )}
+                  <small className="text-muted">Recommended size: 1050px x 600px</small>
                 </div>
 
-                {/* Deed Image Preview and Upload */}
+
                 <div className="mb-3">
-                  <label htmlFor="deedImageFile" className="form-label">
-                    Deed Image (Optional)
-                  </label>
+                  <label className="form-label">Deed Image</label>
+                  <div className="mb-2">
+                    {deedImagePreview && <img src={deedImagePreview} alt="Investor" className="w-25 mb-3" />}
+                  </div>
                   <input
-                    type="file"
                     className="form-control"
-                    id="deedImageFile"
-                    {...register("deed_image")}
+                    type="file"
+                    name="image"
+                    id="image"
+                    accept="image/*"
                     onChange={handleDeedImageChange}
                   />
-                  {deedImagePreview && (
-                    <div className="mt-2">
-                      <img
-                        src={deedImagePreview}
-                        alt="Deed Image Preview"
-                        style={{ maxWidth: "200px", maxHeight: "200px" }}
-                      />
-                    </div>
-                  )}
+                  <small className="text-muted">Recommended size: 1050px x 600px</small>
                 </div>
 
+               
+
                 <div className="modal-footer">
-                  <button type="submit" className="btn btn-primary">
+                  <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">
                     Update
                   </button>
                   <button

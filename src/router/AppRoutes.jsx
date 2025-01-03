@@ -80,6 +80,10 @@ import CreateContainer from "../pages/Container/CreateContainer";
 import UpdateContainer from "../pages/Container/UpdateContainer";
 
 
+
+import BillPdf from '../pages/bill/BillPdf'
+
+
 const AppRoutes = () => {
   return (
     <Routes>
@@ -103,6 +107,7 @@ const AppRoutes = () => {
       <Route path="/bill" element={<Bill />} />
       <Route path="/bill/create" element={<CreateBill />} />
       <Route path="/bill/generate" element={<GenerateBill />} />
+      <Route path="/bill/download/pdf" element={<BillPdf/>}/>
 
       <Route path="/paymentType" element={<PaymentType />} />
       <Route path="/paymentType/create" element={<CreatePaymentType />} />

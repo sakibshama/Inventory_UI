@@ -23,9 +23,12 @@ function Sells() {
 
     const columnNames = [
         { id: 1, val: "Sell ID" },
-        { id: 1, val: "Customer Name" },
-        { id: 2, val: "Total Amount" },
-        { id: 3, val: "Status" }
+        { id: 2, val: "Customer Name" },
+        { id: 3, val: "Total Amount" },
+        { id: 4, val: "Total Profit" },
+        { id: 5, val: "Total Comission" },
+        { id: 6, val: "Status" },
+        { id: 7, val: "Action" }
     ];
 
     return (
@@ -57,6 +60,9 @@ function Sells() {
                                         <td className="text-nowrap">{val.id}</td>
                                         <td className="text-nowrap">{val.customer.name}</td>
                                         <td className="text-nowrap">{val.total_amount}</td>
+                                        <td className="text-nowrap">{val.total_profit}</td>
+                                        <td className="text-nowrap">{val.total_comission}</td>
+                                        <td className="text-nowrap">{val.status}</td>
 
                                         <td className="text-nowrap d-flex align-items-center gap-2">
                                             <button

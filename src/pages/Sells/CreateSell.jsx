@@ -21,7 +21,9 @@ function CreateSell() {
     const dimissModal = useRef();
     const [sellData, setSellData] = useState({
       customer_id:null,
-      total_amount: ""
+      total_amount: "",
+      total_profit: "",
+      total_comission: ""
     });
   
     
@@ -107,6 +109,36 @@ function CreateSell() {
                   value={sellData.total_amount}
                   onChange={(e) => {
                     setSellData({ ...sellData, total_amount: e.target.value });
+                  }}
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="brandNameInput" className="form-label">
+                  Total Profit
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="brandNameInput"
+                  placeholder="Profit"
+                  value={sellData.total_profit}
+                  onChange={(e) => {
+                    setSellData({ ...sellData, total_profit: e.target.value });
+                  }}
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="brandNameInput" className="form-label">
+                  Total Comission
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="brandNameInput"
+                  placeholder="Comission"
+                  value={sellData.total_comission}
+                  onChange={(e) => {
+                    setSellData({ ...sellData, total_comission: e.target.value });
                   }}
                 />
               </div>

@@ -2,6 +2,10 @@ import React, { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createSellItem } from "../../Slicer/SellItemSlicer";
 import {fetchProducts} from './../../Slicer/ProductSlicer';
+import {fetchContainer} from './../../Slicer/ContainerSlicer';
+import {fetchStocks} from './../../Slicer/StockSlicer';
+import {fetchSell} from './../../Slicer/SellsSlicer';
+
 
 function CreateSellItem() {
     const dispatch = useDispatch();
@@ -9,6 +13,9 @@ function CreateSellItem() {
     const [sellItemData, setSellItemData] = useState({
       sell_id: null,
       product_id: null,
+      stock_id: null,
+      container_id: null,
+      comission: null,
       quantity: null,
       price: null,
       total_price: null,
@@ -16,10 +23,16 @@ function CreateSellItem() {
     });
 
     const products = useSelector((state)=>state.product.products);
+    const container = useSelector((state)=>state.containers.Container);
+    const stocks = useSelector((state)=>state.stocks.stocks);
+    const sells = useSelector((state)=>state.sells.sells);
   
     
     useEffect(()=>{
       dispatch(fetchProducts());
+      dispatch(fetchContainer());
+      dispatch(fetchStocks());
+      dispatch(fetchSell());
     },[])
 
     const handleCreateSellItem = () => {
@@ -79,13 +92,13 @@ function CreateSellItem() {
             <div className="modal-body row">
 
 
-            <div className="mb-3 col-md-6 col-sm-12">
+            <div className="mb-3 col-md-12 col-sm-12">
                 <label htmlFor="brandNameInput" className="form-label">
                   Select Product
                 </label>
 
 
-                <input list="encodings" value={sellItemData.product_id} onChange={(e) => { setSellItemData({ ...sellItemData, product_id: e.target.value }) }} class="form-control"/>
+                <input placeholder="Product" list="encodings" value={sellItemData.product_id} onChange={(e) => { setSellItemData({ ...sellItemData, product_id: e.target.value }) }} class="form-control"/>
                   <datalist id="encodings" >
     
                   {products && products.map((val, index) => {
@@ -97,22 +110,65 @@ function CreateSellItem() {
 
               </div>
 
-
               <div className="mb-3 col-md-6 col-sm-12">
                 <label htmlFor="brandNameInput" className="form-label">
-                  Sell ID
+                  Select Stock
                 </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="brandNameInput"
-                  placeholder="customer name"
-                  value={sellItemData.sell_id}
-                  onChange={(e) => {
-                    setSellItemData({ ...sellItemData, sell_id: e.target.value });
-                  }}
-                />
+
+
+                <input placeholder="Stock" list="encodings1" value={sellItemData.stock_id} onChange={(e) => { setSellItemData({ ...sellItemData, stock_id: e.target.value }) }} class="form-control"/>
+                  <datalist id="encodings1" >
+    
+                  {stocks && stocks.map((val, index) => {
+                      return (
+                        <option key={index} value={val.id}>{val.product.name} - [{val.quantity}]</option>
+                      )
+                    })}
+                  </datalist>
+
               </div>
+              <div className="mb-3 col-md-6 col-sm-12">
+                <label htmlFor="brandNameInput" className="form-label">
+                  Select Container
+                </label>
+
+
+                <input placeholder="Container" list="encodings2" value={sellItemData.container_id} onChange={(e) => { setSellItemData({ ...sellItemData,container_id: e.target.value }) }} class="form-control"/>
+                  <datalist id="encodings2" >
+    
+                  {container && container.map((val, index) => {
+                      return (
+                        <option key={index} value={val.id}>{val.shipment_id}</option>
+                      )
+                    })}
+                  </datalist>
+
+              </div>
+              <div className="mb-3 col-md-6 col-sm-12">
+                <label htmlFor="brandNameInput" className="form-label">
+                  Select Sell ID
+                </label>
+
+
+                <input placeholder="Container" list="encodings3" 
+                value={sellItemData.sell_id}
+                onChange={(e) => {
+                  setSellItemData({ ...sellItemData, sell_id: e.target.value });
+                }}
+                 class="form-control"/>
+                  <datalist id="encodings3" >
+    
+                  {sells && sells.map((val, index) => {
+                      return (
+                        <option key={index} value={val.id}>{val.id}</option>
+                      )
+                    })}
+                  </datalist>
+
+              </div>
+              
+
+
 
               <div className="mb-3 col-md-6 col-sm-12">
                 <label htmlFor="brandNameInput" className="form-label">
@@ -132,7 +188,7 @@ function CreateSellItem() {
 
               <div className="mb-3 col-md-6 col-sm-12">
                 <label htmlFor="brandImageFile" className="form-label">
-                  Buy Price
+                  Unit Price
                 </label>
                 <input
                   type="text"
@@ -160,7 +216,7 @@ function CreateSellItem() {
 
               <div className="mb-3 col-md-6 col-sm-12">
                 <label htmlFor="sell Item " className="form-label">
-                  Total Profit
+                  Profit
                 </label>
                 <input
                   type="text"
@@ -168,6 +224,20 @@ function CreateSellItem() {
                   id="sell Item"
                   value={sellItemData.profit}
                   onChange={(e)=>{setSellItemData({...sellItemData, profit: e.target.value})}}
+                />
+  
+              </div>
+
+              <div className="mb-3 col-md-6 col-sm-12">
+                <label htmlFor="sell Item " className="form-label">
+                  Comission
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="sell Item"
+                  value={sellItemData.comission}
+                  onChange={(e)=>{setSellItemData({...sellItemData, comission: e.target.value})}}
                 />
   
               </div>

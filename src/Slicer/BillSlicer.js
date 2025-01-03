@@ -5,6 +5,7 @@ import axios from 'axios';
 const initialState = {
   bills: [],
   setBillId: null,
+  isChanged:false,
   loading: false,
   error: null,
 };
@@ -67,11 +68,22 @@ export const updateBill = createAsyncThunk(
 );
 
 // Delete a brand
+// export const deleteBill = createAsyncThunk(
+//   'bills/deleteBill',
+//   async (id) => {
+//     try {
+//       await axios.delete(`${API_URL}/${id}`); // Use delete instead of get
+//       return id; // Return the ID to remove it from the state
+//     } catch (error) {
+//       return Promise.reject(error.response ? error.response.data : error.message);
+//     }
+//   }
+// );
 export const deleteBill = createAsyncThunk(
   'bills/deleteBill',
   async (id) => {
     try {
-      await axios.delete(`${API_URL}/${id}`); // Use delete instead of get
+      await axios.delete(`${import.meta.env.VITE_BASE_URL}/api/delete-bill/${id}`); // Use delete instead of get
       return id; // Return the ID to remove it from the state
     } catch (error) {
       return Promise.reject(error.response ? error.response.data : error.message);
@@ -84,7 +96,7 @@ const billSlice = createSlice({
   name: 'bills',
   initialState,
   reducers: {
-    setBillId:(state,action)=>{
+    setBillIdz:(state,action)=>{
       state.setBillId=action.payload;
     }
   },
@@ -97,6 +109,7 @@ const billSlice = createSlice({
       .addCase(fetchBills.fulfilled, (state, action) => {
         state.loading = false;
         state.bills = action.payload; // Expecting action.payload to be an array
+        state.isChanged=false;
       })
       .addCase(fetchBills.rejected, (state, action) => {
         state.loading = false;
@@ -124,7 +137,8 @@ const billSlice = createSlice({
       })
       .addCase(createBill.fulfilled, (state, action) => {
         state.loading = false;
-        state.bills.push(action.payload); // Add new brand to state
+        state.isChanged=true;
+        //state.bills.push(action.payload); // Add new brand to state
       })
       .addCase(createBill.rejected, (state, action) => {
         state.loading = false;
@@ -138,11 +152,7 @@ const billSlice = createSlice({
       })
       .addCase(updateBill.fulfilled, (state, action) => {
         state.loading = false;
-        if (action.payload && action.payload.id) {
-          state.bills = state.bills.map(brand => 
-            brand.id === action.payload.id ? action.payload : brand
-          );
-        }
+        state.isChanged=true;
       })
       .addCase(updateBill.rejected, (state, action) => {
         state.loading = false;
@@ -168,6 +178,6 @@ const billSlice = createSlice({
 });
 
 // Export the reducer
-export const  {setBillId} = billSlice.actions;
+export const  {setBillIdz} = billSlice.actions;
 
 export default billSlice.reducer;

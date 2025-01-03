@@ -1,32 +1,43 @@
-import React, { useState, useRef } from "react";
-import { useDispatch } from "react-redux";
+import React, { useState, useRef, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { createBill } from "../../Slicer/BillSlicer";
+import { fetchUsers } from "../../Slicer/UserSlicer";
+import { fetchCustomers } from '../../Slicer/CustomerSlicer';
+import { fetchSell } from '../../Slicer/SellsSlicer';
 
 const CreateBill = () => {
+
   const dispatch = useDispatch();
   const dimissModal = useRef();
   const [billData, setBillData] = useState({
+    user_id: null,
+    customer_id: null,
+    sell_id: null,
     total_amount: "",
     paid_amount: "",
     due_amount: "",
-    discount_amount: "",
-    //TODO::create backend of customer 
-    customer_due: "",
-    
+    discount: "",
     status: "1",
   });
 
 
+  const sells = useSelector((state) => state.sells.sells);
+  const customers = useSelector((state) => state.customers.customers);
+  const users = useSelector((state) => state.users.users);
+
+
+  useEffect(() => {
+    dispatch(fetchCustomers());
+    dispatch(fetchUsers());
+    dispatch(fetchSell());
+  }, []);
+
+
 
   const handleCreateBill = () => {
-    const formData = new FormData();
-      formData.append("total_amount", billData.total_amount);
-      formData.append("paid_amount", billData.paid_amount);
-      formData.append("due_amount", billData.due_amount);
-      formData.append("discount_amount", billData.discount_amount);
-   formData.append("status", billData.status);
+  
 
-    dispatch(createBill(formData))
+    dispatch(createBill(billData))
       .then((res) => {
         // Close the modal after bill is created
         dimissModal.current.click();
@@ -78,8 +89,50 @@ const CreateBill = () => {
                 aria-label="Close"
               ></button>
             </div>
-            <div className="modal-body">
-              <div className="mb-3">
+            <div className="modal-body row">
+
+
+              <div className="mb-3 col-md-6 col-sm-12">
+                <label htmlFor="brandNameInput" className="form-label">
+                  Select Sell ID
+                </label>
+
+
+                <input placeholder="Stock" list="encodings1" value={billData.sell_id} onChange={(e) => { setBillData({ ...billData, sell_id: e.target.value }) }} class="form-control" />
+                <datalist id="encodings1" >
+
+                  {sells && sells.map((val, index) => {
+                    return (
+                      <option key={index} value={val.id}>{val.id}</option>
+                    )
+                  })}
+                </datalist>
+
+              </div>
+
+
+              <div className="mb-3 col-md-6 col-sm-12">
+                <label htmlFor="brandNameInput" className="form-label">
+                  Select Customer
+                </label>
+
+
+                <input placeholder="Customer" list="encodings2" value={billData.customer_id} onChange={(e) => { setBillData({ ...billData, customer_id: e.target.value }) }} class="form-control" />
+                <datalist id="encodings2" >
+
+                  {customers && customers.map((val, index) => {
+                    return (
+                      <option key={index} value={val.id}>{val.name}</option>
+                    )
+                  })}
+                </datalist>
+
+              </div>
+
+
+
+
+              <div className="mb-3 col-md-6 col-sm-12">
                 <label htmlFor="billNameInput" className="form-label">
                   TOTAL AMOUNT
                 </label>
@@ -97,9 +150,8 @@ const CreateBill = () => {
                   }}
                 />
               </div>
-            </div>
-            <div className="modal-body">
-              <div className="mb-3">
+
+              <div className="mb-3 col-md-6 col-sm-12">
                 <label htmlFor="billNameInput" className="form-label">
                   PAID AMOUNT
                 </label>
@@ -117,10 +169,8 @@ const CreateBill = () => {
                   }}
                 />
               </div>
-            </div>
 
-            <div className="modal-body">
-              <div className="mb-3">
+              <div className="mb-3 col-md-6 col-sm-12">
                 <label htmlFor="billNameInput" className="form-label">
                   DUE AMOUNT
                 </label>
@@ -138,9 +188,8 @@ const CreateBill = () => {
                   }}
                 />
               </div>
-            </div>
-            <div className="modal-body">
-              <div className="mb-3">
+
+              <div className="mb-3 col-md-6 col-sm-12">
                 <label htmlFor="billNameInput" className="form-label">
                   DISCOUNT AMOUNT
                 </label>
@@ -149,15 +198,37 @@ const CreateBill = () => {
                   className="form-control"
                   id="billDiscountInput"
                   placeholder="E.g. Asus"
-                  value={billData.discount_amount}
+                  value={billData.discount}
                   onChange={(e) => {
                     setBillData({
                       ...billData,
-                      discount_amount: e.target.value,
+                      discount: e.target.value,
                     });
                   }}
                 />
               </div>
+
+
+
+              
+              <div className="mb-3 col-md-12 col-sm-12">
+                <label htmlFor="brandNameInput" className="form-label">
+                  Select User
+                </label>
+
+
+                <input placeholder="Customer" list="encodings3" value={billData.user_id} onChange={(e) => { setBillData({ ...billData, user_id: e.target.value }) }} class="form-control" />
+                <datalist id="encodings3" >
+
+                  {users && users.map((val, index) => {
+                    return (
+                      <option key={index} value={val.id}>{val.name}</option>
+                    )
+                  })}
+                </datalist>
+
+              </div>
+
             </div>
 
             <div className="modal-footer">

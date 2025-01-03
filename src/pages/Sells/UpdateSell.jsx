@@ -28,9 +28,11 @@ function UpdateSell() {
   // Fetch sell data and set form values
   useEffect(() => {
     dispatch(fetchSellById(sellId)).then((res) => {
-      const { total_amount, customer_id } = res.payload;
+      const { total_amount, customer_id, total_profit, total_comission } = res.payload;
       setValue("customer_id", customer_id); // Set form field value
       setValue("total_amount", total_amount); // Set form field value
+      setValue("total_profit", total_profit); // Set form field value
+      setValue("total_comission", total_comission); // Set form field value
 
     });
   }, [dispatch, sellId, setValue]);
@@ -97,6 +99,43 @@ function UpdateSell() {
                   />
                   {errors.total_amount && (
                     <p className="text-danger">{errors.total_amount.message}</p>
+                  )}
+                </div>
+
+                <div className="mb-3">
+                  <label htmlFor="brandNameUpdate" className="form-label">
+                    Total Profit
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="customerNameUpdate"
+                    placeholder="Profit"
+                    {...register("total_profit", {
+                      required: "Amount is required",
+                    })}
+                  />
+                  {errors.total_profit && (
+                    <p className="text-danger">{errors.total_profit.message}</p>
+                  )}
+                </div>
+
+
+                <div className="mb-3">
+                  <label htmlFor="brandNameUpdate" className="form-label">
+                    Total Comission
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="customerNameUpdate"
+                    placeholder="Comission"
+                    {...register("total_comission", {
+                      required: "Comission is required",
+                    })}
+                  />
+                  {errors.total_amount && (
+                    <p className="text-danger">{errors.total_comission.message}</p>
                   )}
                 </div>
 

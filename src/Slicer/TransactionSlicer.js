@@ -83,6 +83,20 @@ export const updateExpenseTransaction = createAsyncThunk(
   }
 );
 
+export const updateInvestmentTransaction = createAsyncThunk(
+  'transaction/updateInvestmentTransaction',
+  async ({ id, updatedData }, thunkAPI) => {
+    try {
+      const response = await axios.put(`${API_URL}/update_investment/${id}`, updatedData);
+      return response.data; // Assuming response.data.transaction contains the updated transaction
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response ? error.response.data : error.message
+      );
+    }
+  }
+);
+
 // Delete a transaction
 export const deleteTransaction = createAsyncThunk(
   'transaction/deleteTransaction',
@@ -181,6 +195,19 @@ const transactionSlice = createSlice({
        
       })
       .addCase(updateExpenseTransaction.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload; // Handle error message
+      });
+    builder
+      .addCase(updateInvestmentTransaction.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateInvestmentTransaction.fulfilled, (state, action) => {
+        state.loading = false;
+       
+      })
+      .addCase(updateInvestmentTransaction.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload; // Handle error message
       });

@@ -18,6 +18,7 @@ import AllStockSlicer from "../Slicer/AllStockSlicer"
 import RoleSlicer from '../Slicer/RoleSlicer'
 import UserSlicer from '../Slicer/UserSlicer'
 import ContainerSlicer from '../Slicer/ContainerSlicer'
+import GenerateBillSlicer from '../Slicer/GenerateBillSlicer';
 
 
 
@@ -42,6 +43,7 @@ const store = configureStore({
     roles:RoleSlicer,
     users:UserSlicer,
     containers:ContainerSlicer,
+    generateBills: GenerateBillSlicer
 
    
     

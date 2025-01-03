@@ -1,29 +1,64 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProductById,fetchProducts } from "../../Slicer/ProductSlicer"; // Import the action
-import { fetchAllStockById,fetchAllStocks } from "../../Slicer/AllStockSlicer";
+import { fetchProductById, fetchProducts } from "../../Slicer/ProductSlicer"; // Import the action
+import { fetchAllStockById, fetchAllStocks } from "../../Slicer/AllStockSlicer";
+import { createGenerateBill, setGenerateBillIdz } from './../../Slicer/GenerateBillSlicer'
+import AlertMessage from "./AlertMessage";
+import axios from "axios";
+import { fetchUsers } from '../../Slicer/UserSlicer';
+import BillTransaction from "./BillTransaction";
+import { Link } from "react-router-dom";
 
 const BillItems = () => {
   const dispatch = useDispatch();
 
+  const [stockOutAnim, setstockOutAnim] = useState(false);
+
+  const [userId, setUserId] = useState(null);
+  const [paidAmount, setPaidAmount] = useState(null);
+
   // Local state for bill items
   const [billItems, setBillItems] = useState([
-    { product_id: "", sell_price: null, quantity: null, total_price: null },
+    { product_id: "", price: null, quantity: null, total_price: null, stock_quantity: 0, avg: 0 },
   ]);
+
+  const fetchstockByProductId = (id) => {
+    const API_URL = `${import.meta.env.VITE_BASE_URL}/api/products/${id}/stocks`;
+    axios.get(API_URL).then((res) => {
+      let response = res.data;
+      console.log(response);
+      console.log(typeof (response));
+      return response;
+
+    });
+
+  }
+
+
+
 
   // Get fetched product details from Redux store
   const products = useSelector((state) => state.product.products);
-  const stocks=useSelector((state)=>state.allstocks.allstocks)
-console.log("ok",stocks);
+  const stocks = useSelector((state) => state.allstocks.allstocks);
+  const customer_id = useSelector((state) => state.generateBills.customer_id);
+  const users = useSelector((state) => state.users.users);
 
-  useEffect(()=>{
-    dispatch(fetchProducts())    
+  useEffect(() => {
+    dispatch(fetchProducts())
     dispatch(fetchAllStocks())
-  },[dispatch])
+    dispatch(fetchUsers());
+  }, [dispatch])
 
-  useEffect(()=>{   
+  useEffect(() => {
     dispatch(fetchAllStocks())
-  },[dispatch])
+  }, [dispatch])
+
+
+  useEffect(() => {
+    console.log('customer', customer_id);
+
+  }, [customer_id])
+
 
 
 
@@ -33,46 +68,94 @@ console.log("ok",stocks);
     0
   );
 
+
+
   const handleInputChange = async (index, field, value) => {
+    // Create a deep copy of billItems to avoid direct mutation
     const updatedItems = [...billItems];
-    updatedItems[index][field] = value;
+
+    // Update the specific field for the given index
+    updatedItems[index] = { ...updatedItems[index], [field]: value };
 
     // Fetch and set sell_price when product_id changes
     if (field === "product_id") {
-      let fetchedProduct = dispatch(fetchProductById(value)); // Dispatch action to fetch product details
-      console.log("here", value);
-      const selectedStock = stocks.find((stock) => stock.product_id === value);
-      // if (fetchedProduct?.id === value) {
-      //   updatedItems[index].sell_price = fetchedProduct.sell_price;
-      //   updatedItems[index].total_price =
-      //     fetchedProduct.sell_price * (updatedItems[index].quantity || 0);
-      // }
+      try {
+        // Fetch stock details using the product ID
+        const API_URL = `${import.meta.env.VITE_BASE_URL}/api/products/${value}/stocks`;
 
-      if (selectedStock) {
-        updatedItems[index].sell_price = selectedStock.sell_price;
-        updatedItems[index].total_price =
-          selectedStock.sell_price * (updatedItems[index].quantity || 0);
-      } else {
-        updatedItems[index].sell_price = 0;
+        // Wait for the API response
+        const response = await axios.get(API_URL);
+        const mystocks = response.data;
+
+        console.log("Fetched mystocks:", mystocks); // Logs fetched data correctly
+
+        let sold_price = 0;
+
+        for (let x = 0; x < mystocks.length; x++) {
+          sold_price += parseFloat(mystocks[x].sell_price);
+        }
+
+        let avg = sold_price / mystocks.length;
+        console.log(avg);
+        updatedItems[index].avg = avg || 0;
+
+
+        // Assuming `mystocks` is an array, you can access the last stock item
+        if (mystocks && mystocks.length > 0) {
+          const selectedStock = mystocks[mystocks.length - 1]; // Get the last stock object
+          updatedItems[index].price = selectedStock.sell_price || 0;
+          updatedItems[index].total_price =
+            selectedStock.sell_price * (updatedItems[index].quantity || 0);
+        } else {
+          updatedItems[index].price = 0;
+          updatedItems[index].total_price = 0;
+        }
+      } catch (error) {
+        console.error("Error fetching stock data:", error);
+      }
+
+      // Additional API call for product details (optional)
+      try {
+        const response = await dispatch(fetchProductById(value));
+        const stockDetails = response.payload;
+
+        if (stockDetails) {
+          updatedItems[index].stock_quantity = stockDetails.quantity || 0;
+
+        }
+      } catch (error) {
+        console.error("Error fetching product details:", error);
+      }
+    }
+
+    // Recalculate total_price when sell_price or quantity changes
+    if (field === "price" || field === "quantity") {
+      const price = parseFloat(updatedItems[index].price || 0);
+      const quantity = parseFloat(updatedItems[index].quantity || 0);
+      updatedItems[index].total_price = price * quantity;
+      if (quantity > updatedItems[index].stock_quantity) {
+        updatedItems[index].quantity = 0;
         updatedItems[index].total_price = 0;
+        setstockOutAnim(true);
+        setTimeout(() => {
+          setstockOutAnim(false);
+        }, 3000);
       }
 
     }
 
-    // Recalculate total_price when sell_price or quantity changes
-    if (field === "sell_price" || field === "quantity") {
-      const price = parseFloat(updatedItems[index].sell_price || 0);
-      const quantity = parseFloat(updatedItems[index].quantity || 0);
-      updatedItems[index].total_price = price * quantity;
-    }
-
+    // Update the state with the new array
     setBillItems(updatedItems);
+
+    // Log the updated state after it's set
+    console.log("Updated billItems:", updatedItems);
   };
+
 
   const addBillItem = () => {
     setBillItems([
       ...billItems,
-      { product_id: "", sell_price: 0, quantity: 0, total_price: 0 },
+      { product_id: "", price: 0, quantity: 0, total_price: 0, stock_quantity: 0, avg: 0 },
     ]);
   };
 
@@ -81,8 +164,36 @@ console.log("ok",stocks);
     setBillItems(updatedItems);
   };
 
+
+
+  const generateBill = () => {
+    const items = billItems.map(({ stock_quantity, avg, total_price, ...rest }) => rest);
+    // console.log(items);
+
+    const billData = {
+      items: items,
+      user_id: userId,
+      customer_id: customer_id,
+      paid_amount: paidAmount,
+      discount: 0
+    }
+
+    console.log(billData);
+
+    dispatch(createGenerateBill(billData)).then((res) => {
+      console.log(res.payload.bill_id);
+      dispatch(setGenerateBillIdz(res.payload.bill_id));
+      
+    });
+
+
+  }
+
   return (
     <div className="container mt-4">
+
+      {stockOutAnim ? <AlertMessage message="Insufficient Stock" /> : ''}
+
       <h2 className="text-center mb-4">Bill Items</h2>
       {billItems.map((item, index) => (
         <div key={index} className="row align-items-center mb-3">
@@ -112,12 +223,14 @@ console.log("ok",stocks);
             <input
               type="number"
               placeholder="Sell Price"
-              value={item.sell_price}
+              value={item.price}
               onChange={(e) =>
-                handleInputChange(index, "sell_price", e.target.value)
+                handleInputChange(index, "price", e.target.value)
               }
               className="form-control"
             />
+
+            <span className="text-success fw-bold">Avg: {item.avg}</span>
           </div>
 
           {/* Quantity */}
@@ -131,6 +244,8 @@ console.log("ok",stocks);
               }
               className="form-control"
             />
+
+            <span className="text-danger fw-bold">Available Stock: {item.stock_quantity}</span>
           </div>
 
           {/* Total Price (Read-Only) */}
@@ -169,6 +284,42 @@ console.log("ok",stocks);
           Total Bill Amount: <span className="text-primary">${totalBillAmount.toFixed(2)}</span>
         </h4>
       </div>
+
+
+
+      <div className="text-center my-1 row">
+
+        <div className="mb-3 col-md-6 col-sm-12">
+          <label className="form-label">Paid Amount</label>
+          <input type="text" className="form-control" 
+          value={paidAmount}
+          onChange={(e)=>{setPaidAmount(e.target.value)}}
+          placeholder="Paid Amount"/>
+        </div>
+
+        <div className="mb-3 col-md-6 col-sm-12">
+          <label htmlFor="User"></label>
+          <select className="form-control" onChange={(e) => { setUserId(e.target.value) }}>
+            <option>Select User</option>
+            {users.map((val, index) => {
+              return <option key={index} value={val.id}>{val.name}</option>
+            })}
+          </select>
+        </div>
+
+      </div>
+
+      <div className="b-3">
+        <BillTransaction/>
+      </div>
+
+      
+      <div className="text-center">
+        <button className="btn btn-dark " disabled={customer_id ? false : true} onClick={generateBill}>Generate Bill</button>
+        
+      </div>
+      {/* <Link to="/bill/download/pdf"></Link> */}
+
     </div>
   );
 };

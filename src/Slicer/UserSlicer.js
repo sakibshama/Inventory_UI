@@ -11,7 +11,7 @@ const initialState = {
 };
 
 // Define the base URL for API requests
-const API_URL = `${import.meta.env.VITE_BASE_URL}/api/all-users`;
+const API_URL = `${import.meta.env.VITE_BASE_URL}/api/users`;
 
 // Fetch all users
 export const fetchUsers = createAsyncThunk(
